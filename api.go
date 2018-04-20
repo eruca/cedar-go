@@ -80,33 +80,33 @@ func (da *Cedar) Value(id int) (value int, err error) {
 
 // Insert adds a key-value pair into the cedar.
 // It will return ErrInvalidValue, if value < 0 or >= ValueLimit.
-func (da *Cedar) Insert(key []byte, value int) error {
+func (da *Cedar) Insert(key []byte, value int) (int, error) {
 	if value < 0 || value >= ValueLimit {
-		return ErrInvalidValue
+		return 0, ErrInvalidValue
 	}
-	p := da.get(key, 0, 0)
+	id, p := da.get(key, 0, 0)
 	*p = value
-	return nil
+	return id, nil
 }
 
 // Update increases the value associated with the `key`.
 // The `key` will be inserted if it is not in the cedar.
 // It will return ErrInvalidValue, if the updated value < 0 or >= ValueLimit.
-func (da *Cedar) Update(key []byte, value int) error {
-	p := da.get(key, 0, 0)
+func (da *Cedar) Update(key []byte, value int) (int, error) {
+	id, p := da.get(key, 0, 0)
 
 	// key was not inserted
 	if *p == ValueLimit {
 		*p = value
-		return nil
+		return id, nil
 	}
 
 	// key was inserted before
 	if *p+value < 0 || *p+value >= ValueLimit {
-		return ErrInvalidValue
+		return 0, ErrInvalidValue
 	}
 	*p += value
-	return nil
+	return id, nil
 }
 
 // Delete removes a key-value pair from the cedar.

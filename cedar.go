@@ -69,7 +69,7 @@ func New() *Cedar {
 }
 
 // Get value by key, insert the key if not exist
-func (da *cedar) get(key []byte, from, pos int) *int {
+func (da *cedar) get(key []byte, from, pos int) (int, *int) {
 	for ; pos < len(key); pos++ {
 		if value := da.Array[from].Value; value >= 0 && value != ValueLimit {
 			to := da.follow(from, 0)
@@ -81,7 +81,7 @@ func (da *cedar) get(key []byte, from, pos int) *int {
 	if da.Array[from].Value < 0 {
 		to = da.follow(from, 0)
 	}
-	return &da.Array[to].Value
+	return to, &da.Array[to].Value
 }
 
 func (da *cedar) follow(from int, label byte) int {
