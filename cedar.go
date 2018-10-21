@@ -116,16 +116,16 @@ func (da *cedar) popBlock(bi int, head_in *int, last bool) {
 	}
 }
 
-func (da *cedar) pushBlock(bi int, head_out *int, empty bool) {
+func (da *cedar) pushBlock(bi int, head_out *int) {
 	b := &da.Blocks[bi]
-	if empty {
-		*head_out, b.Prev, b.Next = bi, bi, bi
-	} else {
-		tail_out := &da.Blocks[*head_out].Prev
-		b.Prev = *tail_out
-		b.Next = *head_out
-		*head_out, *tail_out, da.Blocks[*tail_out].Next = bi, bi, bi
-	}
+	// if empty {
+	*head_out, b.Prev, b.Next = bi, bi, bi
+	// } else {
+	// 	tail_out := &da.Blocks[*head_out].Prev
+	// 	b.Prev = *tail_out
+	// 	b.Next = *head_out
+	// 	*head_out, *tail_out, da.Blocks[*tail_out].Next = bi, bi, bi
+	// }
 }
 
 func (da *cedar) addBlock() int {
@@ -154,14 +154,14 @@ func (da *cedar) addBlock() int {
 	}
 	da.Array[da.Size+255] = node{-(da.Size + 254), -da.Size}
 
-	da.pushBlock(da.Size>>8, &da.BheadO, da.BheadO == 0)
+	da.pushBlock(da.Size>>8, &da.BheadO)
 	da.Size += 256
 	return da.Size>>8 - 1
 }
 
 func (da *cedar) transferBlock(bi int, head_in, head_out *int) {
 	da.popBlock(bi, head_in, bi == da.Blocks[bi].Next)
-	da.pushBlock(bi, head_out, *head_out == 0 && da.Blocks[bi].Num != 0)
+	da.pushBlock(bi, head_out)
 }
 
 func (da *cedar) popEnode(base int, label byte, from int) int {

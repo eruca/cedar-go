@@ -27,7 +27,7 @@ func loadTestData() {
 
 	// add the keys
 	for i, word := range words {
-		if err := cd.Insert([]byte(word), i); err != nil {
+		if _, err := cd.Insert([]byte(word), i); err != nil {
 			panic(err)
 		}
 	}
@@ -39,7 +39,7 @@ func loadTestData() {
 	}
 
 	for i, word := range words {
-		if err := cd.Update([]byte(word), i); err != nil {
+		if _, err := cd.Update([]byte(word), i); err != nil {
 			panic(err)
 		}
 	}

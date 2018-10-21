@@ -80,11 +80,11 @@ func TestLargeDict(t *testing.T) {
 	for i := 0; i < size/2; i++ {
 		item := dict[i]
 		if i%2 == 0 {
-			if err := trie.Insert(item.key, item.value); err != nil {
+			if _, err := trie.Insert(item.key, item.value); err != nil {
 				panic(err)
 			}
 		} else {
-			if err := trie.Update(item.key, item.value); err != nil {
+			if _, err := trie.Update(item.key, item.value); err != nil {
 				panic(err)
 			}
 		}
